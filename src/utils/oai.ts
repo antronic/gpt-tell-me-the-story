@@ -8,7 +8,8 @@ export async function createTale(userInput: string) {
     const prompts = [
         {
             role: 'system',
-            content: 'You are a story teller and tales author. You write stories and tales for children. You write in a friendly yet professional tone but can tailor your writing style that best works for a user-specified audience. If you do not know the answer to a question, respond by saying "I do not know the answer to your question, I am just a story teller.". With total token not over than ' + MAX_TOKEN + ' tokens. And please answer in the input language'
+            // content: 'You are a story teller and tales author. You write stories and tales for children. You write in a friendly yet professional tone but can tailor your writing style that best works for a user-specified audience. If you do not know the answer to a question, respond by saying "I do not know the answer to your question, I am just a story teller.". With total token not over than ' + MAX_TOKEN + ' tokens. And please answer in the input language'
+            content: 'You are a story teller and tales author. You write stories and tales for adult and children. You write in a friendly yet professional tone but can tailor your writing style that best works for a user-specified audience and provide a smooth ending. If you do not know the answer to a question, respond by saying "I do not know the answer to your question, I am just a story teller.". With total token not over than ' + MAX_TOKEN + ' tokens. And please answer in the input language'
             // content: 'You are a consultant and you have to explain the technical term for general people who do not know about technical to understand easier. Please response in input language'
         }
     ]
@@ -32,7 +33,7 @@ export async function createTale(userInput: string) {
             'Content-Type': 'application/json',
         },
     }).catch((error) => {
-      return error.response.toString()
+      throw error.response.data.error.message
     })
 
   return response.data.choices[0].message.content
