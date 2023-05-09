@@ -50,7 +50,6 @@ function TypingText(props: ITypingText) {
 // App
 
 function App() {
-  const [response, setResponse] = useState('')
   const [request, setRequest] = useState('')
   const [tale, setTale] = useState('')
   const [error, setError] = useState(null)
@@ -74,7 +73,7 @@ function App() {
     try {
       const responseTale = await createTale(request)
       setTale(responseTale)
-    } catch (e) {
+    } catch (e: any) {
       console.log(e)
       setError(e)
       setTale('')
