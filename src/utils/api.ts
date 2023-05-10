@@ -13,5 +13,5 @@ export async function getSampleTaleRequest(lang = 'th') {
     throw error.response.data.error.message
   })
 
-  return response.data.body
+  return response.data
 }
