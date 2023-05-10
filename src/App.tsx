@@ -84,6 +84,7 @@ function App() {
 
   async function getSample() {
     const sample = await getSampleTaleRequest()
+    console.log(sample)
     setRequest(sample)
   }
 
