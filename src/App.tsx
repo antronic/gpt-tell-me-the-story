@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { createTale } from './utils/oai'
 import { getSampleTaleRequest } from './utils/api'
 
+import OpenAiLogo from './assets/OpenAI_Logo.svg'
+
 interface ITypingText {
   children: string
   cutAmount?: number
@@ -136,6 +138,27 @@ function App() {
             </div>
           )
         }
+
+        <div className="mt-12">
+          <div className="inline-flex justify-center items-center">
+            <p className="inline-block text-sm">Powered by</p>
+            <a href="https://azure.microsoft.com/en-us/products/cognitive-services/openai-service">
+              <img src={OpenAiLogo} className="h-6 ml-4 inline-block fill-white" alt="" />
+            </a>
+            <a href="https://language.cognitive.azure.com/" className="ml-2 font-semibold text-slate-100 inline-block hover:underline">
+              <img src="./images/MS-Azure_logo_horiz_white_rgb.png" className="h-12 ml-0 inline-block" alt="" />
+            </a>
+          </div>
+
+          <div className="mt-2 text-center text-sm text-slate-400">
+            <p className="">
+              Code with ☕️ by <a target="_blank" href="https://www.github.com/antronic" className="hover:underline font-semibold">Jirachai C.</a>
+            </p>
+            <p className="text-xs">
+              Built from <a href="https://vitejs.dev/" className="hover:underline">Vite</a> + <a href="https://reactjs.org/" className="hover:underline">React</a> + <a href="https://www.typescriptlang.org/" className="hover:underline">TS</a>
+            </p>
+          </div>
+        </div>
       </div>
     </>
   )

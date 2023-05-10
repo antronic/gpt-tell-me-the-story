@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker'
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const lang = req.query.lang || (req.body && req.body.lang) || 'th'
-    // faker.setLocale(lang)
 
     const animalType = faker.animal.type()
     const adj = faker.word.adjective()
@@ -13,13 +12,16 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 
     responseMessage = `${adj} ${color} ${animalType}`
     if (lang === 'th') {
-        responseMessage += ' เป็นภาษาไทย'
+        responseMessage += ' เล่าเป็นภาษาไทย'
     }
 
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: responseMessage })
     };
 
 };
