@@ -1,4 +1,4 @@
-name: Azure Static Web App CI/CD
+name: Primary - Azure Static Web Apps CI/CD
 
 on:
   push:
