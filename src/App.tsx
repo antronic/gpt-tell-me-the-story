@@ -139,7 +139,7 @@ function App() {
           )
         }
 
-        <div className="mt-12">
+        <div className="mt-12 flex flex-col justify-center">
           <div className="inline-flex justify-center items-center">
             <p className="inline-block text-sm">Powered by</p>
             <a href="https://azure.microsoft.com/en-us/products/cognitive-services/openai-service">
@@ -150,7 +150,7 @@ function App() {
             </a>
           </div>
 
-          <div className="mt-2 text-center text-sm text-slate-400">
+          <div className="mt-2 mx-auto text-center text-sm text-slate-400">
             <p className="">
               Code with ☕️ by <a target="_blank" href="https://www.github.com/antronic" className="hover:underline font-semibold">Jirachai C.</a>
             </p>
