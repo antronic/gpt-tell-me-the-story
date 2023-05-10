@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createTale } from './utils/oai'
+import { getSampleTaleRequest } from './utils/api'
 
 interface ITypingText {
   children: string
@@ -81,6 +82,11 @@ function App() {
     }
   }
 
+  async function getSample() {
+    const sample = await getSampleTaleRequest()
+    setRequest(sample)
+  }
+
 
   // หมี ไปสอบ IELTS
 
@@ -99,8 +105,10 @@ function App() {
           <div className={`w-full text-center mt-12 transition-all duration-1000 delay-1000 ${isMount ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             <p className="text-xl">I would like to hear the story about...</p>
             <div className="mt-2">
-              <input type="text" className="px-2 py-2 rounded-l-md bg-black/20 text-xl" onChange={e => setRequest(e.target.value)} />
+              <input type="text" className="px-2 py-2 rounded-l-md bg-black/20 text-xl" value={request} onChange={e => setRequest(e.target.value)} />
               <button className="px-2 py-2 bg-amber-800 rounded-r-md text-xl" onClick={submit}>Tell me!</button>
+
+              <button className="px-2 py-2 ml-2 bg-amber-700 hover:bg-amber-800 rounded-md text-xl" onClick={getSample}>Sample</button>
             </div>
           </div>
         </div>
