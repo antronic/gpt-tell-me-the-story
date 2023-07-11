@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { createTale } from './utils/oai'
 import { getSampleTaleRequest } from './utils/api'
 
+import { getRecognizer, speak } from './utils/azure-speech'
+
 import OpenAiLogo from './assets/OpenAI_Logo.svg'
 
 interface ITypingText {
@@ -76,6 +78,7 @@ function App() {
     try {
       const responseTale = await createTale(request)
       setTale(responseTale)
+      readStory(responseTale)
     } catch (e: any) {
       console.log(e)
       setError(e)
@@ -88,6 +91,25 @@ function App() {
     const sample = await getSampleTaleRequest()
     console.log(sample)
     setRequest(sample)
+  }
+
+  // function onStartToSpeakClick() {
+  //   // Speech to text from Azure Speech
+  //   const recognizer = getRecognizer()
+  //   setIsListenting(true)
+  //   setInput('Listening...')
+  //   recognizer.recognizeOnceAsync((result) => {
+  //     if (result.reason === ResultReason.RecognizedSpeech) {
+  //       setListenText(result.text)
+  //       setInput(result.text)
+  //     }
+
+  //     setIsListenting(false)
+  //   })
+  // }
+
+  function readStory(output: string) {
+    speak(output)
   }
 
 
