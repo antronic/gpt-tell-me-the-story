@@ -5,6 +5,7 @@ import { getSampleTaleRequest } from './utils/api'
 import { getRecognizer, speak } from './utils/azure-speech'
 
 import OpenAiLogo from './assets/OpenAI_Logo.svg'
+import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk'
 
 interface ITypingText {
   children: string
@@ -16,6 +17,9 @@ function TypingText(props: ITypingText) {
   const [isTyping, setIsTyping] = useState(false)
   const [text, setText] = useState('')
   const [textArray, setTextArray] = useState<Array<string>>([])
+
+  const [isListenting, setIsListenting] = useState(false)
+
   const cutAmount = props.cutAmount || 1
   const speed = props.typingSpeed || 50
 
@@ -60,6 +64,7 @@ function App() {
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isMount, setIsMount] = useState(false)
+  const [isListenting, setIsListenting] = useState(false)
 
   useEffect(() => {
     setTimeout(() => {
@@ -93,20 +98,20 @@ function App() {
     setRequest(sample)
   }
 
-  // function onStartToSpeakClick() {
-  //   // Speech to text from Azure Speech
-  //   const recognizer = getRecognizer()
-  //   setIsListenting(true)
-  //   setInput('Listening...')
-  //   recognizer.recognizeOnceAsync((result) => {
-  //     if (result.reason === ResultReason.RecognizedSpeech) {
-  //       setListenText(result.text)
-  //       setInput(result.text)
-  //     }
+  function onStartToSpeakClick() {
+    // Speech to text from Azure Speech
+    const recognizer = getRecognizer()
+    setIsListenting(true)
+    // setInput('Listening...')
+    recognizer.recognizeOnceAsync((result) => {
+      if (result.reason === ResultReason.RecognizedSpeech) {
+        // setListenText(result.text)
+        setRequest(result.text)
+      }
 
-  //     setIsListenting(false)
-  //   })
-  // }
+      setIsListenting(false)
+    })
+  }
 
   function readStory(output: string) {
     speak(output)
@@ -133,9 +138,15 @@ function App() {
               <input type="text" className="px-2 py-2 rounded-l-md bg-black/20 text-xl" value={request} onChange={e => setRequest(e.target.value)} />
               <button className="px-2 py-2 bg-amber-800 rounded-r-md text-xl" onClick={submit}>Tell me!</button>
 
-              <button className="px-2 py-2 ml-2 bg-amber-700 hover:bg-amber-800 rounded-md text-xl" onClick={getSample}>Sample</button>
+              {/* Add something down here */}
             </div>
           </div>
+        </div>
+
+        <div className="text-center">
+          <p className="text-xl text-white">
+            { isListenting ? 'Listening...' : ''}
+          </p>
         </div>
 
         {

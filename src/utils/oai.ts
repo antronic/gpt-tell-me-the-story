@@ -1,5 +1,11 @@
 import axios from 'axios'
 
+/**
+ * Generates a tale based on the user input using the OpenAI GPT-3 API.
+ * @param userInput The user input to use as a prompt for generating the tale.
+ * @returns A Promise that resolves to the generated tale as a string.
+ * @throws An error if the API request fails or returns an error message.
+ */
 export async function createTale(userInput: string) {
   const OaiApiKey = import.meta.env.VITE_OAI_API_KEY || ''
     const MAX_TOKEN = 1000
