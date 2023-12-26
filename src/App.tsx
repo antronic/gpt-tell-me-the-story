@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk'
+import { Icon } from '@iconify/react'
 
 
 import { createTale } from './utils/oai'
@@ -7,56 +8,11 @@ import { getSampleTaleRequest } from './utils/api'
 import { getRecognizer, speak } from './utils/azure-speech'
 
 import OpenAiLogo from './assets/OpenAI_Logo.svg'
-
-interface ITypingText {
-  children: string
-  cutAmount?: number
-  typingSpeed?: number
-}
-
-function TypingText(props: ITypingText) {
-  const [isTyping, setIsTyping] = useState(false)
-  const [text, setText] = useState('')
-  const [textArray, setTextArray] = useState<Array<string>>([])
-
-  const cutAmount = props.cutAmount || 1
-  const speed = props.typingSpeed || 50
-
-  useEffect(() => {
-    if (!isTyping && text === '') {
-      setIsTyping(true)
-      setTextArray(props.children.split(''))
-    }
-  }, [props.children])
-
-  useEffect(() => {
-    if (isTyping) {
-      typingAnimation()
-    }
-  }, [textArray, isTyping, text])
-
-  function typingAnimation() {
-    const _textArray = textArray
-
-    setTimeout(() => {
-      if (textArray.length > 0) {
-        const t = _textArray.splice(0, cutAmount).join('')
-
-        setText(prevText =>  prevText.concat(t))
-        setTextArray(_textArray)
-      } else {
-        setIsTyping(false)
-      }
-    }, speed)
-  }
-
-  return (
-    <>{text}</>
-  )
-}
+import ConfigBox from './components/ConfigBox'
+import TypingText from './components/TypingText'
+import PermissionChecker from './components/PermissionChecker'
 
 // App
-
 function App() {
   const [request, setRequest] = useState('')
   const [tale, setTale] = useState('')
@@ -64,6 +20,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [isMount, setIsMount] = useState(false)
   const [isListenting, setIsListenting] = useState(false)
+
+  const [isConfigOpen, setIsConfigOpen] = useState(false)
+  const [isPermissionCheckerOpen, setIsPermissionCheckerOpen] = useState(false)
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,8 +43,7 @@ function App() {
       setTale(responseTale)
       readStory(responseTale)
     } catch (e: any) {
-      console.log(e)
-      setError(e)
+      setError(e.message)
       setTale('')
       setIsLoading(false)
     }
@@ -117,31 +75,37 @@ function App() {
   }
 
 
-  // หมี ไปสอบ IELTS
 
   return (
     <>
+      {isConfigOpen && <ConfigBox onClose={() => setIsConfigOpen(false)}/>}
+      {isPermissionCheckerOpen && <PermissionChecker onClose={() => setIsPermissionCheckerOpen(false)}/>}
+
       <div className="flex flex-col justify-center h-full px-4">
         <div>
-          <h1 className="text-center text-7xl font-bold">GPT! Tell me the story</h1>
+          <h1 className="text-center text-4xl md:text-6xl lg:text-7xl font-bold">
+            <span className="text-cyan-400">GPT!</span> Tell me the story
+          </h1>
         </div>
 
         <div className={`text-center delay-500 duration-1000 transition-all ${isMount ? 'opacity-100' : 'opacity-0'}`}>
-          <p className="text-2xl"><TypingText>Ok my  dear, what kind of story do you want to hear?</TypingText></p>
+          <p className="text-lg md:text-2xl text-slate-400"><TypingText>Ok my  dear, what kind of story do you want to hear?</TypingText></p>
         </div>
 
         <div className={`transition-all duration-1000 w-full ${isLoading ? '-translate-y-24 opacity-0' : 'translate-y-0 opacity-100'}`}>
           <div className={`w-full text-center mt-12 transition-all duration-1000 delay-1000 ${isMount ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <p className="text-xl">I would like to hear the story about...</p>
+            <p className="text-lg md:text-xl">I would like to hear the story about...</p>
+
+            {/* Input */}
             <div className="mt-2">
               <input type="text" className="px-2 py-2 rounded-l-md bg-black/20 text-xl" value={request} onChange={e => setRequest(e.target.value)} />
-              <button className="px-2 py-2 bg-amber-800 rounded-r-md text-xl" onClick={submit}>Tell me!</button>
+              <button className="px-2 py-2 bg-cyan-400 hover:bg-cyan-600 text-slate-900 rounded-r-md text-xl" onClick={submit}>Tell me!</button>
 
               {/* Blue button - click to listen */}
               <button
                 className={`
                   px-2 py-2 ml-2 rounded-md text-xl
-                  ${isListenting ? 'bg-slate-500' : 'bg-indigo-600 hover:bg-blue-800'}
+                  ${isListenting ? 'bg-slate-500' : 'bg-blue-600 hover:bg-blue-700'}
                 `}
                 onClick={onStartToSpeakClick}
               >
@@ -178,7 +142,21 @@ function App() {
           )
         }
 
-        <div className="mt-12 flex flex-col justify-center">
+        <div className="mx-auto w-1/6 h-[0.25px] mt-8 border-dashed border border-slate-500"></div>
+
+        <div className="flex justify-center my-4">
+          <div className="bg-white/5 rounded-lg px-6 py-2">
+            <ul className="flex gap-x-4">
+              <li className="cursor-pointer underline" onClick={() => setIsConfigOpen(true)}>Configuration</li>
+              <li className="cursor-pointer underline" onClick={() => setIsPermissionCheckerOpen(true)}>Requirements checker</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mx-auto w-1/6 h-[0.25px] my-4 border-dashed border border-slate-500"></div>
+
+        {/* Credit */}
+        <div className="mt-6 flex flex-col justify-center">
           <div className="inline-flex justify-center items-center">
             <p className="inline-block text-sm">Powered by</p>
             <a href="https://azure.microsoft.com/en-us/products/cognitive-services/openai-service">
@@ -196,6 +174,10 @@ function App() {
             <p className="text-xs">
               Built from <a href="https://vitejs.dev/" className="hover:underline">Vite</a> + <a href="https://reactjs.org/" className="hover:underline">React</a> + <a href="https://www.typescriptlang.org/" className="hover:underline">TS</a>
             </p>
+
+            <a href="https://github.com/antronic/gpt-tell-me-the-story" target="_blank" className="mt-2 p-2 text-center inline-block rounded-full hover:bg-black/25 active:bg-white/25">
+              <Icon icon="tabler:brand-github-filled" className="inline-block text-xl" />
+            </a>
           </div>
         </div>
       </div>

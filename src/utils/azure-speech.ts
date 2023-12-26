@@ -1,5 +1,7 @@
 import { SpeechConfig, SpeechSynthesizer, AudioConfig, SpeakerAudioDestination, SpeechRecognizer } from 'microsoft-cognitiveservices-speech-sdk'
-const subscriptionKey = import.meta.env.VITE_AZ_SPEECH_KEY || ''
+
+const config = JSON.parse(localStorage.getItem('TELL_ME_STORY_CONFIG') || '{}')
+const subscriptionKey = config.AZ_SPEECH_KEY || ''
 const serviceRegion = 'southeastasia'
 
 export const getRecognizer = () => {
