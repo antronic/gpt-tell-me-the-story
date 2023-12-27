@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export async function createTale(userInput: string) {
   const config = JSON.parse(localStorage.getItem('TELL_ME_STORY_CONFIG') || '{}')
-  const OaiApiKey = config.OAI_API_URL || ''
-  const OaiApiURL = config.OAI_API_KEY || ''
+  const OaiApiKey = config.OAI_API_KEY || ''
+  const OaiApiURL = config.OAI_API_URL || ''
   const MAX_TOKEN = 1000
 
   const prompts = [
