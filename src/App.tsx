@@ -15,6 +15,7 @@ import PermissionChecker from './components/PermissionChecker'
 // App
 function App() {
   const [request, setRequest] = useState('')
+  const [currentPrompt, setCurrentPrompt] = useState('')
   const [tale, setTale] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -38,6 +39,7 @@ function App() {
     setTale('')
     setError(null)
     setIsLoading(true)
+    setCurrentPrompt(request)
     try {
       const responseTale = await createTale(request)
       setTale(responseTale)
@@ -97,14 +99,16 @@ function App() {
             <p className="text-lg md:text-xl">I would like to hear the story about...</p>
 
             {/* Input */}
-            <div className="mt-2">
-              <input type="text" className="px-2 py-2 rounded-l-md bg-black/20 text-xl" value={request} onChange={e => setRequest(e.target.value)} />
-              <button className="px-2 py-2 bg-cyan-400 hover:bg-cyan-600 text-slate-900 rounded-r-md text-xl" onClick={submit}>Tell me!</button>
+            <div className="mt-2 flex justify-center flex-wrap gap-y-2 gap-x-4 w-full">
+              <div>
+                <input type="text" className="px-2 py-2 rounded-l-md bg-black/20 text-xl" value={request} onChange={e => setRequest(e.target.value)} />
+                <button className="px-2 py-2 bg-cyan-400 hover:bg-cyan-600 text-slate-900 rounded-r-md text-xl" onClick={submit}>Tell me!</button>
+              </div>
 
               {/* Blue button - click to listen */}
               <button
                 className={`
-                  px-2 py-2 ml-2 rounded-md text-xl
+                  px-2 py-2 rounded-md text-xl
                   ${isListenting ? 'bg-slate-500' : 'bg-blue-600 hover:bg-blue-700'}
                 `}
                 onClick={onStartToSpeakClick}
@@ -129,15 +133,19 @@ function App() {
 
         {
           !isLoading && (error !== null || tale !== '') && (
-            <div className={`mt-8 text-center mx-auto lg:w-2/3 p-4 rounded-md ${error !== null ? 'bg-red-500/25' : 'bg-white/10'}`}>
+            <div className="mt-8 ">
+              <p className="font-bold my-2">Your prompt: {currentPrompt}</p>
 
-              <p className="text-xl text-red-300 my-2">
-                {error !== null && <TypingText typingSpeed={25} cutAmount={5}>{error}</TypingText>}
-              </p>
+              <div className={`text-center mx-auto lg:w-2/3 p-4 rounded-md ${error !== null ? 'bg-red-500/25' : 'bg-white/10'}`}>
 
-              <p className="text-xl">
-                <TypingText cutAmount={3}>{tale}</TypingText>
-              </p>
+                <p className="text-xl text-red-300 my-2">
+                  {error !== null && <TypingText typingSpeed={25} cutAmount={5}>{error}</TypingText>}
+                </p>
+
+                <p className="text-xl">
+                  <TypingText cutAmount={3}>{tale}</TypingText>
+                </p>
+              </div>
             </div>
           )
         }
